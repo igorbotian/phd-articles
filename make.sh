@@ -3,11 +3,11 @@
 RELATIVE_DIR=`dirname $0`
 cd $RELATIVE_DIR
 
-MASTER_DOCUMENT=article
+MASTER_DOCUMENT=thesis
 SCRIPT_DIR=`pwd`
 SRC_DIR=$SCRIPT_DIR/src
 OUTPUT_DIR=$SRC_DIR/../target
-PDF_FILE_NAME=article
+PDF_FILE_NAME=phd_thesis_igor_botian
 
 function call_pdflatex() {
 	pdflatex -synctex=1 -interaction=nonstopmode -output-directory=$OUTPUT_DIR $MASTER_DOCUMENT
