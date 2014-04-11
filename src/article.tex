@@ -1,0 +1,339 @@
+% sudo apt-get install texlive-latex-base
+% sudo apt-get install texlive-fonts-extra
+% sudo apt-get install texlive-latex-recommended
+% sudo apt-get install texlive-lang-cyrillic
+
+\documentclass[12pt,a4paper,oneside]{article}
+
+\title{A brief review of main SVM-based ranking models}
+\author{Igor Botian, Lev Utkin}
+\date{\today}
+
+\usepackage[utf8]{inputenc} % возможность использования Unicode-символов в исходных файлах
+
+\usepackage{color} % поддержка цветного текста
+\usepackage{datetime} % поддержка календаря и дат
+\usepackage{fancyhdr} % использование собственного формата заголовков
+\usepackage[T2A]{fontenc} % задание шрифта
+\usepackage{geometry} % задания страничных отступов
+\usepackage[pdftex,bookmarks,unicode]{hyperref} % поддержка возможности использования ссылок в качестве гиперссылок
+\usepackage{indentfirst} % отступ первого параграфа в разделе
+\usepackage{setspace} % задание межстрочного интервала
+\usepackage{verbatim} % скрытие "comment-окружений" из результирующего документа
+\usepackage[english]{babel} % поддержка переносов слов
+
+\hypersetup{
+%	bookmarkstype=none,
+%	plainpages=false,
+	pdftitle={A brief review of main SVM-based ranking models},
+	pdfauthor={Igor Botian, Lev Utkin},
+	pdfsubject={Paper},
+	pdfnewwindow=false,
+	pdfkeywords={Machine learning, ranking, support vector machine, training data, comparison judgments},
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,
+	urlcolor=black,
+	pageanchor=false} % если пакет "lastpage" импортирован, то необходимо отключить данную опцию
+
+% задание страничных отступов
+\geometry{left=2.5cm}
+\geometry{right=2.0cm}
+\geometry{top=2.0cm}
+\geometry{bottom=2.5cm}
+
+\onehalfspacing % задание полуторного межстрочного интервала
+\setlength{\parindent}{25pt} % задание абзацного отступа в 5 символов
+\setlength{\headheight}{28pt}
+
+\begin{document}
+
+\input{tex_definitions}
+\ApplyCommonPageStyle
+
+%======================================================================================================================
+
+\centerline{\large \textbf{A BRIEF REVIEW OF MAIN SVM-BASED RANKING MODELS}}
+
+\vspace*{1em}
+
+\centerline{Igor Yu. Botian (\email{igor.botian@gmail.com}), Lev V. Utkin (\email{lev.utkin@mail.ru})}
+\centerline{Department of Control, Automation, and System Analysis,}
+\centerline{Saint Petersburg State Forest Technical University}
+
+\vspace*{1em}
+
+\par
+{\small %
+	\textbf{Abstract:} The paper deals with a critical review of SVM-based ranking models which are used to solve a certain set of machine learning problems. 
+	A short description, advantages, and disadvantages are provided for each model, as well as general comparison of them. 
+	A problem connected with getting a training data for these models is also raised. Applications of the models are given, as well as future research directions. 
+}
+
+\par
+{\footnotesize %
+	\textbf{Keywords:} Machine learning, ranking, support vector machine, training data, comparison judgments.
+}
+
+%======================================================================================================================
+
+\section{Introduction}
+\label{sec:introduction}
+
+\par
+Nowadays amount of information which a person has to deal with every day increases steadily. 
+In this connection, a matter of value of the information being look-up by the person or incoming for him is raised inevitably. 
+In other words, a problem of information relevance is emerged. 
+Under conditions of broad proliferation of computer systems, one of the main means of solving such the problem is so-called search engines. 
+
+\par
+Depending on their nature, they provide different information to user. 
+For instance, web search engines provide relevant results of user queries. 
+At that, depending on a type of the query, user can get a list of web-links, the result of an entered mathematical expression, forecast information, and so on, as results of his query. 
+There are engines providing an answer for a user question asked in natural language (Apple Siri, Google Now, Microsoft Cortana). 
+Services like Shazaam searches for name of a song fragment recorded by the user. 
+Finally, there are many online advertising services. 
+The content of the advertising banner exposure to user is based on his search history, visited web-sites, his geolocation, etc.
+
+\par
+Each search engine is based on the principle of data ranking. 
+Thanks to this fact, depending on the query the same data can correspond to different relevance degrees. 
+Information about relevance one or another data is taken from so-called training data. 
+Values of all elements belonging to the training data are given by experts.
+
+\par
+One of the most used approaches to learning to rank is an approach based on \emph{support vector machine (SVM)} apparatus \link{1}. 
+Based on its features, ranking problem reduces to data classification problem. It can be said that it may be treated as a general tool used for such the set of problems. 
+
+\par
+Classification problems are specific enough thus depending on application domain they may differ a lot. 
+For example, a standard form of training data used in classification in the context of search engines cannot be obtained at all \link{2}. 
+In these systems, a priori information which can be used in many other cases is represented in a form of some relative assessments. 
+As a consequence of this fact, there is a need of development of appropriate approaches oriented on such the data processing.
+
+%======================================================================================================================
+
+\section{SVM-based ranking models}
+\label{sec:svm_based_ranking_models}
+
+\par
+By definition, the learning to rank problem is referred to a type of \emph{supervised machine learning}. 
+Such the learning consists of ranking model automatic selection on a given training data set. One of the ranking models is a model based on support vector machine method \link{1}.  
+From mathematical point of view, the method consists in mapping of vectors representing input data into space with greater dimensional and further searching of a separating hyperplane with maximum gap in this space. 
+The main advantage of this method is efficient realization non-linear separating functions in the context of the classification problem.
+
+\par
+SVM-based models, as well as any ranking models, can be divided into three categories depending on the approach they based on \link{2}: pointwise, pairwise, or listwise. 
+The main difference consists in what form input and output data have, as well as loss function.
+
+\begin{itemize}
+	\item \textbf{Pointwise approach}. It is expected that each input-output data pair confronts with a certain numerical assessment. 
+	In this case the learning to rank problem reduces to regression building: a numerical assessment is needed to predict for each single pair. 
+	In the bounds of this approach many existing machine learning regression-based algorithms can be applied directly.
+	\item \textbf{Pairwise approach}. While the approach is used, learning to rank problem reduces to building a binary classifier dealing with two input objects corresponding to the same query. 
+	It is needed to determine which of them is more relevant.
+	\item \textbf{Listwise approach}. The approach consists in building a model dealing with a set of all input objects corresponding to the same query. 
+	As a result it returns a list of these objects but ranked.
+\end{itemize}
+
+\par
+The main SVM-based models corresponding to these approaches are SVM-based pointwise model \link{3}, RankSVM \link{4}, and SVM\textsuperscript{map} \link{5}. 
+Review of each model is given below in further sections. 
+
+%======================================================================================================================
+
+\section{SVM-based pointwise model}
+\label{sec:svm_based_pointwise_model}
+
+\par
+The model is based on pointwise approach \link{3}. 
+A principle of work consists in reduction of ranking problem to classification problem. 
+In this case the classification is regarded to a variation of \emph{supervised learning problem}, in which all output values are discrete. 
+At that, an output value corresponds to a relevance degree of a given object. 
+In this connection, the value relates to a certain object category. 
+A rigorous mathematical definition of the algorithm and the corresponding optimization problem which implements this model are given in \link{3}.
+
+\par
+There is a disadvantage connected with SVM-based pointwise model. 
+By its nature, ranking is more relative order prediction rather than a precise relevance degree of a given object. 
+Thus while the model is applied, a relative order between objects can not normally take a part in the learning process by the reason of its absence. 
+
+%======================================================================================================================
+
+\section{RankSVM}
+\label{sec:ranksvm}
+
+\par
+The models are based on pairwise approach \link{4}. 
+And the ranking problem in this case reduces to a binary classification problem. 
+In comparison to SVM-based pointwise model, an output value is a relative order between objects, no an absolute value which characterizes a relevance degree of them. 
+Thus, RankSVM does not have the disadvantage which is belonged to SVM-based pointwise model.
+
+\par
+In its turn, RankSVM has a number of disadvantages. 
+At first, by its nature, a result of binary classification is a list of objects which contains no information about difference in relevance degree between each two next objects. 
+At second, RankSVM is more sensitive to imprecise data from the training set. 
+It affects negatively on quality of obtained results. 
+At last, dependence of a number of pairs on a number of objects is mathematically quadratic that negatively impacts on processing performance in case of a huge data.
+
+\par
+Initially, the method was developed to improve search engines efficiency. 
+In simple words, it is easier to describe this model in terms of web-search. 
+In whole, RankSVM is comprised of three steps on learning stage:
+
+\begin{enumerate}
+	\item It calculates distances between two any vectors.
+	\item It maps input elements between queries and web-pages visited by the user into a certain feature space. 
+	\item It states an optimization problem similar to SVM classification and solves such the problem by means of a regular SVM solver.
+\end{enumerate}
+
+\par
+A rigorous mathematical definition of the algorithm and the corresponding optimization problem which implements RankSVM are given in \link{4}. 
+
+%======================================================================================================================
+
+\section{SVM\textsuperscript{map}}
+\label{sec:svmmap}
+
+\par
+A principle of work of SVM\textsuperscript{map} is based on listwise approach \link{5}. 
+As a whole, the model solves classification problem in more natural way rather than SVM-based pointwise model and RankSVM. 
+It can be explained that these two models do not take into account the fact that some objects (or pair of objects) do not correspond to the same input query.
+
+\par
+In other words, SVM\textsuperscript{map} uses a whole set of objects corresponding to a query as one input object and a list of these input objects (or their relevance degrees) in ranked form. 
+A rigorous mathematical definition of the algorithm and the corresponding optimization problem which implements SVM\textsuperscript{map} are given in \link{5}. 
+
+\par
+In accordance to previously conducted researches \link{6}, efficiency of listwise ranking algorithms is better in whole rather than pointwise and pairwise ones. 
+On other hand, a more efficient learning algorithm is needed in order to make the listwise approach more practical. 
+It also regards to SVM\textsuperscript{map} model.
+
+%======================================================================================================================
+
+\section{SVM-based ranking models comparison}
+\label{sec:svm_based_ranking_models_comparison}
+
+\par
+SVM-based pointwise model reduces ranking to regression, classification, and ordinal regression. 
+In its turn, RankSVM reduces ranking to pairwise classification, whereas SVM\textsuperscript{map} reduces ranking to a brand-new problem and defines specific algorithms for this.
+
+\par
+Advantage of the first two models consists in possibility of direct application of many existing various tools. 
+The main disadvantage of them is that individual ranking features are not considered in definition of algorithms used by them. 
+An issue related with SVM\textsuperscript{map} consists in difficulty of algorithms used by the model.
+
+%======================================================================================================================
+
+\section{Problems connected with training data set}
+\label{sec:problems_connected_with_training_data_set}
+
+\par
+On the assumption of application of the models given above and taking into account of their advantages and disadvantage, there is a choice of an appropriate model needed in order to solve a certain practical problem. 
+At that, to build an efficient model another important problem should be taken into account. 
+It consists in preparation of a high qualitative training set. 
+The process, in its turn, connects with a set of problems:
+
+\begin{itemize}
+	\item At first, the fact should be taken into account that a training set is needed to have a great number of objects but at the same time have a cost of its getting as less as possible. 
+	A striking example which exposures this issue is a straightforward inquiry of a great number of respondents: an amount of data obtained is limited and the process itself is costly.
+	\item At second, data obtained by experts is not always enough and even correct because there may be people subjectivity taken a place during inquiry process. 
+	Development and further application of the data selection strategy can be regarded as a solution for this issue. 
+	First examples of such the strategies are Depth-k pooling \link{7}, MTC \link{8}, and LETOR \link{9}.
+\end{itemize}
+
+\par
+To reduce cost of a training data acquisition it is logical to approach to automation of this process. 
+In this connection, there is a need to develop and apply a strategy which favors more well thought-out selection of training data elements. 
+In extreme case, it may help to get rid of over-fitting issue. 
+In its turn, when it is possible, analysis of actions made by the user can be applied to promote further adaptation of used algorithms.
+
+\par
+The issues given above are not fully solved in the bounds of existing models. 
+And not only SVM-based models but others also. 
+At that, it should be noted that these problems are just main whereas the process of training data acquisition is conjugated with a number of additional problems \link{2}. 
+
+%======================================================================================================================
+
+\section{Future research directions}
+\label{sec:future_research_directions}
+
+\par
+Nowadays there many researches are conducted in the area of learning to rank problems. 
+In this connection, new and new problems required further investigation are emerged. 
+At that, it can be noted that they affect various aspects of the ranking problem.
+
+\par
+As it was said before, ranking algorithms based on listwise approach are researched in less degree rather than algorithms based on pointwise and pairwise approaches. 
+At that, it is noted a need to develop more advanced ranking models rather than existing ones \link{10}. 
+
+\par
+A problem related to building a training data set takes a place. 
+Generally, the dataset is comprised of nonrandom objects selected manually. 
+Each of them affects on results of the learning in some degree, whereas real data may have a rather big percentage of objects which correspond to a small relevance degree. 
+Solution of this problem is connected with well-thought selection of objects belonging to the training data set.
+
+\par
+There is another problem related to a training data set \link{2}. 
+By its nature a training data set built basing on experts' assessments does not confront by its scale with amount of data needed for rigorous learning. 
+At that, possibility to adapt existing algorithms to new incoming data is not taken into consideration. 
+Such the issue can be solved by means of so-called self-learning of ranking algorithms, when processed data takes a part in the training set in a certain degree.
+
+\par
+As of ranking algorithms, there are several problems connected with them. 
+At this time a few attention is paid to scalability on development of the ranking algorithms \link{11}. 
+The possibility to parallel the algorithm may considerably decrease its execution time in case of a huge amount of data. 
+It is especially important in real-time systems, where a trade-off between results accuracy and algorithms time consumption is emerged inevitably \link{12}. 
+In its turn, a problem connected with flexible selection of ranking features may be also referred to this category \link{13}. 
+The training data set directly influences on results of data processing. 
+At this moment it is built on the assumption of subjective experts' criterion. 
+But on the other hand it might change at runtime to meet optimization needs. 
+At that, the algorithm itself should be resistant to changes in the feature set and not to depend on it \link{13}. 
+To some extent, it is also connected with self-learning of the ranking model.
+
+\par
+At last, a ranking problem is emerged on conditions that the given information is imprecise or incomplete. 
+In this case a priori relative assessments are group, or in other words interval. 
+It should be noted that at this moment such the problem is not researched enough. 
+Authors of this paper are working on this direction.
+
+%======================================================================================================================
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+\par
+Aim of this work was to give a short critical review of existing ranking models based on the support vector machine apparatus. 
+The following models were considered: SVM-based pointwise model, RankSVM, SVM\textsuperscript{map}. 
+They are based on fundamentally different ways of input data processing. 
+Main advantages and disadvantages were provided for each model. 
+Comparison of these SVM-based models was given.
+
+\par
+Along with SVM-based models review, existing problems connected with building a training data set were enumerated. 
+Implementation of each model is based on this data set. Future research directions were given. 
+From the authors point of view, one of the most challenging open issue deals with modification of existing ranking algorithms is their adaptation to imprecise and limited relative assessments.
+
+%======================================================================================================================
+
+\section*{References}
+\label{sec:references}
+
+\begin{enumerate}
+	\item Herbrich, R., Obermayer, K., Graepel, T.: Large margin rank boundaries for ordinal regression. In: Advances in Large Margin Classifiers, pp. 115–132 (2000).
+	\item T.-Y. Liu: Learning to Rank for Information Retrieval, Springer (2011).
+	\item Nallapati, R.: Discriminative models for information retrieval. In: Proceedings of the 27th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2004), pp. 64–71 (2004).
+	\item Joachims, T.: Optimizing search engines using clickthrough data. In: Proceedings of the 8th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD 2002), pp. 133–142 (2002).
+	\item Yue, Y., Finley, T., Radlinski, F., Joachims, T.: A support vector method for optimizing average precision. In: Proceedings of the 30th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2007), pp. 271–278 (2007).
+	\item Xia, F., Liu, T.Y., Wang, J., Zhang, W., Li, H.: Listwise approach to learning to rank—theorem and algorithm. In: Proceedings of the 25th International Conference on Machine Learning (ICML 2008), pp. 1192–1199 (2008).
+	\item Aslam, J.A., Kanoulas, E., Pavlu, V., Savev, S., Yilmaz, E.: Document selection methodologies for efficient and effective learning-to-rank. In: Proceedings of the 32nd Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2009), pp. 468–475 (2009).
+	\item Carterette, B., Allan, J., Sitaraman, R.: Minimal test collections for retrieval evaluation. In: Proceedings of the 29th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2006), pp. 268–275 (2006).
+	\item Liu, T.Y., Xu, J., Qin, T., Xiong, W.Y., Li, H.: LETOR: benchmark dataset for research on learning to rank for information retrieval. In: SIGIR 2007 Workshop on Learning to Rank for Information Retrieval (LR4IR 2007) pp. 3-10 (2007).
+	\item Qin, T., Liu, T.Y., Zhang, X.D., Wang, D., Li, H.: Learning to rank relational objects and its application to web search. In: Proceedings of the 17th International Conference on World Wide Web (WWW 2008), pp. 407–416 (2008).
+	\item Chang, E., Zhu, K., Wang, H., Bai, H., Li, J., Qiu, Z., Cui, H.: Parallelizing support vector machines on distributed computers. In: Platt, J., Koller, D., Singer, Y., Roweis, S. (eds.) Advances in Neural Information Processing Systems 20 (NIPS 2007), pp. 257–264. MIT Press, Cambridge (2008).
+	\item Wang, L., Lin, J., Metzler, D.: Learning to efficiently rank. In: Proceeding of the 33rd International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2010), pp. 138–145 (2010).
+	\item Chang, Y., Liu, T.Y.: Future directions in learning to rank. JMLR: Workshop and Conference Proceedings 14, pp. 91–100 (2011).
+\end{enumerate}
+
+\end{document}
