@@ -9,7 +9,7 @@
 	\cfoot{\thepage}
 }
 
-% =====
+% =============================================================================
 
 \newcommand{\sub} [1] {%
 	\scriptsize{#1}%
@@ -17,4 +17,16 @@
 
 \newcommand{\Rho}{%
 	\mathrm{\rho}%
+}
+
+\newcommand{\link} [1] {%
+	\textcolor{blue}{#1}%
+}
+
+\newcommand{\reference} [1] {%
+	\link{[#1]}%
+}
+
+\newcommand{\todo} [1] {%
+	\textcolor{red}{#1}%
 }

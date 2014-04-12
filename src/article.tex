@@ -14,6 +14,7 @@
 \usepackage{amsmath} % для поддержки расширенных математических символов
 \usepackage{amsfonts} % для поддержки математических шрифтов
 \usepackage{amssymb} % для поддержки расширенных математических символов
+\usepackage{color} % для поддержки цвета текста, отличного от чёрного
 \usepackage{datetime} % поддержка календаря и дат
 \usepackage{fancyhdr} % использование собственного формата заголовков
 \usepackage[T2A]{fontenc} % задание шрифта
@@ -28,7 +29,7 @@
 %	bookmarkstype=none,
 %	plainpages=false,
 	pdftitle={Нечёткий SVM},
-	pdfauthor={Игорь Ботян},
+	pdfauthor={И.Ю. Ботян, Л.В. Уткин},
 	pdfsubject={Статья},
 	pdfnewwindow=false,
 	pdfkeywords={машина опорных векторов, ранжирование документов, задача классификации},
@@ -61,7 +62,7 @@
 
 \par
 В порядковой регрессии мы рассматриваем проблему, которая имеет свойства, присущие как классификации в целом (i), так и метрической регрессии (ii). 
-Как в (i) $y$ является конечным множеством, так и как в (ii) присутствует упорядочение среди элементов $y$ [4].
+Как в (i) $y$ является конечным множеством, так и как в (ii) присутствует упорядочение среди элементов $y$ \reference{1}.
 
 % TODO: 
 % label - метка
@@ -81,8 +82,7 @@
 Очевидный факт заключается в том, что пара документов не являются статистически независимыми, что нарушает основное предположение, лежащее в алгоритмах классификации.  
 % подход < (инструментарий == фреймворк) < аппарат
 Однако принципиально иной теоретический инструментарий необходим для анализа общей характеристики процесса обучения. 
-Обсуждения на эту тему будут приведены в Разд. \ref{sec:svm_by_imprecise_comparisons}. 
-Существует множество алгоритмов попарного ранжирования, представленных в литературе по методам упорядочивания, и которые основываются на нейронных сетях [8], перцептроне [21, 30], бустинге [18], машине опорных векторов [22, 23] и других методах обучения [12, 33, 36, 37].
+Существует множество алгоритмов попарного ранжирования, представленных в литературе по методам упорядочивания, и которые основываются на нейронных сетях \reference{2}, перцептроне \reference{3, 4}, бустинге \reference{5}, машине опорных векторов \reference{1, 6} и других методах обучения \reference{7}, \reference{8}, \reference{9}, \reference{10}.
 В оставшейся части данного раздела будет приведено несколько их примеров. 
 
 %======================================================================================================================
@@ -131,7 +131,7 @@ R(\mathbf{w}) = \int \limits_{\chi \times \{-1, +1\}} L(f, \mathbf{x}, y) \mathr
 В остальных случаях эта ошибка равна нулю. 
 
 \par
-Если имеется \emph{n} наблюдений, эмпирический функционал риска определяется путём предположения, что функция \(F_0(\mathbf{x}, y)\) оценивается во рамках аппарата непараметрических методов [13] и имеет скачки размером 1/\emph{n} в точках \(x_1, \dots, x_n\). 
+Если имеется \emph{n} наблюдений, эмпирический функционал риска определяется путём предположения, что функция \(F_0(\mathbf{x}, y)\) оценивается во рамках аппарата непараметрических методов \reference{11} и имеет скачки размером 1/\emph{n} в точках \(x_1, \dots, x_n\). 
 То есть эмпирический функционал риска определяется как
 
 \[
@@ -154,7 +154,7 @@ R_{emp}(\mathbf{w}) = n^{-1} \cdot \sum \limits_k=1^n L(f_k, \mathbf{x}_k, y_k)
 Другими словами, обучающая выборка в попарном подходе состоит из пар объектов как обучающие экземпляры или примеры. 
 
 \par
-Для того чтобы рассматривать выходные значения, мы определим две основные идеи попарного ранжирования, которые детально рассмотрены Т.Й. Лиу [?].
+Для того чтобы рассматривать выходные значения, мы определим две основные идеи попарного ранжирования, которые детально рассмотрены Т.Й. Лиу \reference{12}.
 Первая из них - это анализ на основе U-статистики.
 Она основывается на предположении, что объекты - статистически независимые случайные величины.
 Вторая идея основана на анализе средних. 
@@ -164,7 +164,7 @@ R_{emp}(\mathbf{w}) = n^{-1} \cdot \sum \limits_k=1^n L(f_k, \mathbf{x}_k, y_k)
 В то же время предлагаемый инструментарий может быть применён и к реализации первой идеи аналогичным образом. 
 
 \par
-В соответствии с идеей на основе средних [?] каждая пара объектов \((\mathbf{x}, \mathbf{z})\) характеризуется выходной величиной \(y \in \{-1,1\}\), где \emph{y} = 1 означает, что данный объект с признаками \(\mathbf{x}\) является более предпочтительным, чем объект с признаками \(\mathbf{z}\), и \(\mathbf{x} \succ \mathbf{z}\). Если \(y = -1\), то в таком случае \(\mathbf{z} \succ \mathbf{x}\). Тогда предполагается, что \((\mathbf{x}, \mathbf{z}, y)\) является случайной величиной с функцией распределения \(F_1\). Функционал риска в данном случае определяется как
+В соответствии с идеей на основе средних \reference{12} каждая пара объектов \((\mathbf{x}, \mathbf{z})\) характеризуется выходной величиной \(y \in \{-1,1\}\), где \emph{y} = 1 означает, что данный объект с признаками \(\mathbf{x}\) является более предпочтительным, чем объект с признаками \(\mathbf{z}\), и \(\mathbf{x} \succ \mathbf{z}\). Если \(y = -1\), то в таком случае \(\mathbf{z} \succ \mathbf{x}\). Тогда предполагается, что \((\mathbf{x}, \mathbf{z}, y)\) является случайной величиной с функцией распределения \(F_1\). Функционал риска в данном случае определяется как
 
 \[
 R(\mathbf{w}) = \int \limits_{\chi \times \chi \times \{-1, 1\}} L(f, \mathbf{x}, \mathbf{z}, y) \mathrm{d} F_1(\mathbf{x}, \mathbf{z}, y)
@@ -198,7 +198,7 @@ R_{emp}(\mathbf{w}) = \frac{1}{n} \sum \limits_{i=1}^n L(f_i, \mathbf{x_i}, \mat
 
 \par
 Одним из наиболее известных подходов для поиска данной функции \emph{f} является применение метода RankSVM, который строит модель ранжирования путём минимизации регуляризируемого отступа на основе парных потерь. 
-Модель RankSVM строится путём минимизации целевой функции [?, ?]
+Модель RankSVM строится путём минимизации целевой функции \reference{1}, \reference{6}
 
 \[
 \frac{1}{2} <w, w> + C \cdot \sum \limits_{i=1}^n L(f_i, \mathbf{x_i}, \mathbf{z_i}),
@@ -236,7 +236,7 @@ f(\mathbf{x_i}, w) - f(\mathbf{z_i}, w) \geq 1 - \xi_i,
 Предположим, что было получено \emph{N} наблюдений элемента множества \(u \in U\).
 При этом каждое наблюдение получено в результате неточного измерения, приводящего к множеству значений \emph{A}.
 Обозначим \(c_i\) как количество появлений множества \(A_i \subseteq U\), а \(\Rho_o(U)\) множеством всех подмножеств \emph{U} (множество мощностей \emph{U}).
-Частотная функция \emph{m}, называемая \emph{базовой вероятностью}, может быть определена как [?, ?]:
+Частотная функция \emph{m}, называемая \emph{базовой вероятностью}, может быть определена как \reference{13}, \reference{14}:
 
 \[
 m : \Rho_o(U) \to [0,1],
@@ -245,7 +245,7 @@ m(\varnothing) = 1, \sum \limits_{A \in \Rho_o(U)} m(A) = 1.
 
 \par
 Стоит отметить, что область определения базовой вероятности, \(\Rho_o(U)\), отличается от области определения функции плотности, которым является \emph{U}. 
-В соответствии с [?], эта функция может быть получена следующим образом:
+В соответствии с \reference{13}, эта функция может быть получена следующим образом:
 
 \[
 m(A_i) = c_i / N.
@@ -255,18 +255,18 @@ m(A_i) = c_i / N.
 Если \(m(A_i) > 0\), то есть \(A_i\) встречается лишь один раз, то \(A_i\) называется \emph{фокальным элементом}. 
 
 \par
-В соответствии с [?], оценки \emph{функции доверия} \(Bel(A)\) и \emph{функции правдоподобия} \(Pl(A)\) для какого-то события \(A \subseteq U\), могут быть определены как
+В соответствии с \reference{14}, оценки \emph{функции доверия} \(Bel(A)\) и \emph{функции правдоподобия} \(Pl(A)\) для какого-то события \(A \subseteq U\), могут быть определены как
 
 \[
 Bel(A) = \sum \limits_{A_i: A_i \subseteq A} m(A_i), 
 Pl(A) = \sum \limits_{A_i: A_i \cap \neq \varnothing} m(A_i).
 \]
 
-Как было указано в [?], функция доверия может быть формально определена как функция, удовлетворяющая аксиомам, которые могут быть расценены как ослабление аксиом Колмогорова, характеризующие вероятностные функции. 
-Поэтому разумно понимать функцию доверия как обобщённую вероятностную функцию [?], а оценки функций доверия \(Bel(A)\) и правдоподобия \(Pl(A)\) могут рассматриваться как нижняя и верхняя границы для вероятности \emph{A}, то есть \(Bel(A) \leq Pr(A) \leq Pl(A)\).
+Как было указано в \reference{15}, функция доверия может быть формально определена как функция, удовлетворяющая аксиомам, которые могут быть расценены как ослабление аксиом Колмогорова, характеризующие вероятностные функции. 
+Поэтому разумно понимать функцию доверия как обобщённую вероятностную функцию \reference{13}, а оценки функций доверия \(Bel(A)\) и правдоподобия \(Pl(A)\) могут рассматриваться как нижняя и верхняя границы для вероятности \emph{A}, то есть \(Bel(A) \leq Pr(A) \leq Pl(A)\).
 
 \par
-Если существует функция \(h(x)\), то нижнее и верхнее ожидания функции во фреймворке функций доверия могут быть найдены следующим образом [?, ?]:
+Если существует функция \(h(x)\), то нижнее и верхнее ожидания функции во фреймворке функций доверия могут быть найдены следующим образом \reference{16}, \reference{17}:
 
 \[
 \mathbb{\overline{E}} h = \sum \limits_{i=1}^N m(A_i) \inf_{x \in A_i} h(x), 
@@ -345,7 +345,7 @@ L (f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})).
 Выбор вероятностного распределения, максимизирующего оценку риска, может рассматриваться как минимаксная (пессимистичная) стратегия. 
 Она может быть достаточно просто объяснена следующим образом. 
 ``Наихудшее'' распределение, обеспечивающее наибольшее значение функционала риска, должно быть выбрано из множества распределений. 
-Критерий минимакса выступает в качестве страховки против наихудшего случая, так как он нацелен на минимизацию ожидаемой потери в наименее благоприятном случае [?]. 
+Критерий минимакса выступает в качестве страховки против наихудшего случая, так как он нацелен на минимизацию ожидаемой потери в наименее благоприятном случае \reference{18}. 
 ``Наилучшее'' распределение, обеспечивающее наименьшее значение функционала риска, приводит к миниминной (оптимистичной) стратегии.
 
 %======================================================================================================================
@@ -407,7 +407,7 @@ G_{ij} \succ 0, (i, j) \in \Rho.
 
 \par
 Как результат, мы имеем задачу линейного программирования, соответствующую минимаксной стратегии. 
-Можно увидеть, что данная задача оптимизации отличается от подобных задач, описанных другими авторами, например, [?], дополнительными ограничениями для каждой переменной \(G_{ij}\). 
+Можно увидеть, что данная задача оптимизации отличается от подобных задач, описанных другими авторами, например, \reference{12}, дополнительными ограничениями для каждой переменной \(G_{ij}\). 
 
 %======================================================================================================================
 
@@ -443,9 +443,9 @@ G_{ij} \geq L ( f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})), \forall 
 
 \par
 Для того чтобы ограничить класс возможных решений задачи классификации и предотвратить переобучение, к целевой функции добавляется стабилизационное или регуляризационное слагаемое \(\Omega[f]\), в частности, \(\Omega[f] = \frac{1}{2}\|w\|^2 = \frac{1}{2} \langle w, w \rangle \). 
-Это стандартное регуляризационное слагаемое, которое является наиболее популярным штрафом, или сглаживающим элементом, предложенным Тихоновым [?]. 
+Это стандартное регуляризационное слагаемое, которое является наиболее популярным штрафом, или сглаживающим элементом, предложенным Тихоновым \reference{19}. 
 Сглаживающий элемент может рассматриваться как ограничение, которое обеспечивает уникальность с помощью функций штрафа со случайным колебанием и эффективно ограничивающее пространство допустимых решений. 
-Детальный анализ регуляризационных методов может быть также найден в работах [?] [?]. 
+Детальный анализ регуляризационных методов может быть также найден в работах \reference{20} \reference{21}. 
 
 \par
 % TODO objective function (2)
@@ -457,7 +457,7 @@ G_{ij} \geq L ( f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})), \forall 
 \]
 
 \par
-Здесь \emph{C} - это постоянный параметр ``стоимости'', который устанавливает компромисс между минимизацией функционала риска и гладкостью разделяющей функции [?]. 
+Здесь \emph{C} - это постоянный параметр ``стоимости'', который устанавливает компромисс между минимизацией функционала риска и гладкостью разделяющей функции \reference{22}. 
 Таким образом, мы приходим к задаче квадратичной оптимизации. 
 
 \par
@@ -528,11 +528,11 @@ G_{ij} (C - \sum \limits_{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_
 \]
 
 \par
-Из задачи оптимизации можно увидеть, что она сведена к хорошо известной двойственной задаче квадратичной оптимизации (см. в качестве [?] для частного случая, когда \(\mathbf{A_i} = \{\mathbf{x_i}\}\) и \(\mathbf{B_i} = \{\mathbf{z_i}\}\)). 
+Из задачи оптимизации можно увидеть, что она сведена к хорошо известной двойственной задаче квадратичной оптимизации (см. в качестве \reference{23} для частного случая, когда \(\mathbf{A_i} = \{\mathbf{x_i}\}\) и \(\mathbf{B_i} = \{\mathbf{z_i}\}\)). 
 
 \par
 Полученные результаты могут быть применены в пространстве признаков большей размерности, \(\varphi(\mathbf{x})\), для некоторой нелинейной функции \(\varphi\). 
-Это достаточно просто получить путём замены скалярных произведений между преобразованными векторами признаков \((\varphi(\mathbf{x_1}) - \varphi(\mathbf{z_1})) (\varphi(\mathbf{x_2}) - \varphi(\mathbf{z_2}))\) при помощи ядра \(K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2})\), где (см. [?])
+Это достаточно просто получить путём замены скалярных произведений между преобразованными векторами признаков \((\varphi(\mathbf{x_1}) - \varphi(\mathbf{z_1})) (\varphi(\mathbf{x_2}) - \varphi(\mathbf{z_2}))\) при помощи ядра \(K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2})\), где (см. \reference{24})
 
 \[
 K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2}) = K(\mathbf{x_1}, \mathbf{x_2}) - K(\mathbf{x_1}, \mathbf{z_2}) - K(\mathbf{z_1}, \mathbf{x_2}) + K(\mathbf{z_1}, \mathbf{z_2}).
@@ -540,5 +540,35 @@ K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2}) = K(\mathbf{x_1}, \mat
 
 \par
 Здесь \(K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2})\) является ядром Мерсера. 
+
+%======================================================================================================================
+
+\section{Список литературы}
+\label{sec:references}
+
+\begin{enumerate}
+	\item R. Herbrich, T. Graepel, K. Obermayer. Large margin rank boundaries for ordinal regression. Smola, Bartlett, Schoelkopf, and Schuurmans, editors, Advances in Large Margin Classifiers, pages 115–132. MIT Press, Cambridge, MA, 2000
+	\item C.J. Burges, T. Shaked, E. Renshaw, A. Lazier, M. Deeds, N. Hamilton, G. Hullender. Learning to rank using gradient descent. Proceedings of the 22nd International Conference on Machine Learning (ICML 2005), стр. 89–96, 2005
+	\item J. Gao, H. Qi, X. Xia, J. Nie. Linear discriminant model for information retrieval. Proceedings of the 28th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2005), стр. 290–297, 2005
+	\item L. Shen, A.K. Joshi. Ranking and reranking with perceptron. Journal of Machine Learning 60(1–3), стр. 73–96, 2005
+	\item Y. Freund, R. Iyer, R. Schapire, Y. Singer. An efficient boosting algorithm for combining preferences. Journal of Machine Learning Research 4, стр. 933–969, 2003
+	\item T. Joachims. Optimizing search engines using clickthrough data. Proceedings of the 8th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD 2002), стр. 133–142, 2002
+	\item W.W. Cohen, R.E. Schapire, Y. Singer. Learning to order things. Advances in Neural Information Processing Systems (NIPS 1997), том 10, стр. 243–270, 1998
+	\item M.F. Tsai, T.Y. Liu, T. Qin, H.H. Chen, W.Y. Ma. Frank: a ranking method with fidelity loss. Proceedings of the 30th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2007), стр. 383–390, 2007
+	\item Z. Zheng, K. Chen, G. Sun, H. Zha. A regression framework for learning ranking functions using relative relevance judgments. Proceedings of the 30th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2007), pp. 287–294, 2007
+	\item Z. Zheng, H. Zha, G. Sun. Query-level learning to rank using isotonic regression. SIGIR 2008 Workshop on Learning to Rank for Information Retrieval (LR4IR 2008), 2008
+	\item J. Wolfowitz. Additive partition functions and a class of statistical hypotheses. Annals of Mathematical Statistics, 13(3), стр. 247–279, 1942
+	\item T.Y. Liu. Learning to Rank for Information Retrieval, Springer, 2011
+	\item A.P. Dempster. Upper and lower probabilities induced by a multi-valued mapping. Annales of Mathematical Statistics, 38(2), стр. 325–339, 1967
+	\item G. Shafer. A Mathematical Theory of Evidence. Princeton University Press, 1976
+	\item J.Y. Halpern, R. Fagin. Two views of belief: Belief as generalized probability and belief as evidence. Artificial Intelligence, 54(3), стр. 275–317, 1992
+	\item H.T. Nguyen,  E.A. Walker. On decision making using belief functions. In R.Y. Yager, M. Fedrizzi, and J. Kacprzyk, editors, Advances in the Dempster-Shafer theory of evidence, pp. 311–330. Wiley, New York, 1994
+	\item T.M. Strat. Decision analysis using belief functions. International Journal of Approximate Reasoning, 4(5), стр. 391–418, 1990
+	\item C.P. Robert. The Bayesian Choice. Springer, New York, 1994
+	\item A.N. Tikhonov, V.Y. Arsenin. Solution of Ill-Posed Problems. W.H. Winston, Washington DC, 1977
+	\item T. Evgeniou, T. Poggio, M. Pontil, A. Verri. Regularization and statistical learning theory for data analysis. Computational Statistics & Data Analysis, 38(4), стр. 421 –432, 2002
+	\item B. Scholkopf, A.J. Smola. Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond. The MIT Press, Cambridge, Massachusetts, 2002
+	\item H. Yu, Y. Kim, S. Hwang. Rv-svm: An efficient method for learning ranking SVM. T. Theeramunkong, B. Kijsirikul, N. Cercone, and T.-B. Ho, editors, Advances in Knowledge Discovery and Data Mining, том 5476 of Lecture Notes in Computer Science, стр. 426–438. Springer Berlin / Heidelberg, 2009
+\end{enumerate}
 
 \end{document}
