@@ -76,7 +76,7 @@
 То есть цель обучения заключается в минимизации числа неправильно классифицированных пар документов. 
 В крайнем случае, если все пары документов корректно классифицированы, то все документы будут корректно проранжированы. 
 Отметим, что такая классификация отличается от классификации, используемой в поточечном подходе, так как она рассматривает каждую пару документов. 
-Возникает естественный вопрос, возникающий в случае независимости пар документов, что нарушает основное предположение любой классификации. 
+Возникает вопрос, имеющий место в случае независимости пар документов, так как это нарушает основное предположение любой классификации. 
 Очевидный факт заключается в том, что пара документов не являются статистически независимыми, что нарушает основное предположение, лежащее в алгоритмах классификации.  
 Однако принципиально иной теоретический инструментарий необходим для анализа общей характеристики процесса обучения. 
 Существует множество алгоритмов попарного ранжирования, представленных в литературе по методам упорядочивания, и которые основываются на нейронных сетях \reference{Burges2005}, перцептроне \reference{Gao2005} \reference{Shen2005}, бустинге \reference{Freund2003}, машине опорных векторов \reference{Herbrich2000} \reference{Joachims2002} и других методах обучения \reference{Cohen1998}, \reference{Tsai2007}, \reference{Zheng2007}, \reference{Zheng2008}.
@@ -123,7 +123,7 @@ R(\mathbf{w}) = \int \limits_{\chi \times \{-1, +1\}} L(f, \mathbf{x}, y) \mathr
 То есть эмпирический функционал риска определяется как
 
 \[
-R_{emp}(\mathbf{w}) = n^{-1} \cdot \sum \limits_k=1^n L(f_k, \mathbf{x}_k, y_k)
+R_{emp}(\mathbf{w}) = n^{-1} \cdot \sum \limits_{k=1}^n L(f_k, \mathbf{x}_k, y_k).
 \]
 
 Здесь \(f_k=f(\mathbf{x_k}, w)\). 
@@ -142,7 +142,7 @@ R_{emp}(\mathbf{w}) = n^{-1} \cdot \sum \limits_k=1^n L(f_k, \mathbf{x}_k, y_k)
 Другими словами, обучающая выборка в попарном подходе состоит из пар объектов как обучающие экземпляры или примеры. 
 
 \par
-Для того чтобы рассматривать выходные значения, для начала необходимо определить две основные идеи попарного ранжирования, которые детально рассмотрены Т.Й. Лиу \reference{Liu2011}.
+Для того чтобы рассматривать выходные значения, для начала необходимо определить две основные идеи попарного ранжирования, которые детально рассмотрены Лиу \reference{Liu2011}.
 Первая из них - это анализ на основе U-статистики.
 Она основывается на предположении, что объекты - статистически независимые случайные величины.
 Вторая идея основана на анализе средних. 
@@ -152,14 +152,15 @@ R_{emp}(\mathbf{w}) = n^{-1} \cdot \sum \limits_k=1^n L(f_k, \mathbf{x}_k, y_k)
 В то же время предлагаемый инструментарий может быть применён и к реализации первой идеи аналогичным образом. 
 
 \par
-В соответствии с идеей на основе средних \reference{Liu2011} каждая пара объектов \((\mathbf{x}, \mathbf{z})\) характеризуется выходной величиной \(y \in \{-1,1\}\), где \emph{y} = 1 означает, что данный объект с признаками \(\mathbf{x}\) является более предпочтительным, чем объект с признаками \(\mathbf{z}\), и \(\mathbf{x} \succ \mathbf{z}\). Если \(y = -1\), то в таком случае \(\mathbf{z} \succ \mathbf{x}\). Тогда предполагается, что \((\mathbf{x}, \mathbf{z}, y)\) является случайной величиной с функцией распределения \(F_1\). Функционал риска в данном случае определяется как
+В соответствии с идеей, предложенной Лиу \reference{Liu2011} и основывающейся на использовании математических ожиданий, каждая пара объектов \((\mathbf{x}, \mathbf{z})\) характеризуется выходной величиной \(y \in \{-1,1\}\), где \emph{y} = 1 означает, что данный объект с признаками \(\mathbf{x}\) является более предпочтительным, чем объект с признаками \(\mathbf{z}\), и \(\mathbf{x} \succ \mathbf{z}\). Если \(y = -1\), то в таком случае \(\mathbf{z} \succ \mathbf{x}\). Тогда предполагается, что \((\mathbf{x}, \mathbf{z}, y)\) является случайной величиной с функцией распределения \(F_1\). Функционал риска в данном случае определяется как
 
 \[
 R(\mathbf{w}) = \int \limits_{\chi \times \chi \times \{-1, 1\}} L(f, \mathbf{x}, \mathbf{z}, y) \mathrm{d} F_1(\mathbf{x}, \mathbf{z}, y)
 \]
 
 \par
-Данный функционал риска означает ожидаемые потери того, что существует некоторая разделяющая функция \emph{f}, которая может неправильно классифицировать случайные пары объектов. 
+
+Данный функционал риска означает ожидаемые потери, получающиеся в результате неправильной классификации случайных пар объектов некоторой разделяющей функцией \emph{f}. 
 
 \par
 Пусть имеется какое-то множество \emph{Q} из \emph{n} предпочтений, основывающихся на сравнительных оценках:
@@ -182,20 +183,20 @@ R_{emp}(\mathbf{w}) = \frac{1}{n} \sum \limits_{i=1}^n L(f_i, \mathbf{x_i}, \mat
 Теперь задача классификации может быть сформулирована как задача поиска оценочной, или ранжирующей, функции \(f(\mathbf{x}, \mathbf{w})\) (или её параметров \(\mathbf{w}\)), которая минимизирует эмпирический функционал риска, представленный выше. 
 
 \par
-Одним из наиболее известных подходов для поиска данной функции \emph{f} является применение метода RankSVM, который строит модель ранжирования путём минимизации регуляризируемого отступа на основе парных потерь. 
+Одним из наиболее известных подходов для поиска данной функции \emph{f} является применение модели RankSVM, которая проводит ранжирование путём минимизации регуляризируемого отступа на основе парных потерь. 
 Модель RankSVM строится путём минимизации целевой функции \reference{Herbrich2000}, \reference{Joachims2002}
 
 \[
-\frac{1}{2} <w, w> + C \cdot \sum \limits_{i=1}^n L(f_i, \mathbf{x_i}, \mathbf{z_i}),
-\]
+\frac{1}{2} <w, w> + C \cdot \sum \limits_{i=1}^n L(f_i, \mathbf{x_i}, \mathbf{z_i}).
+\] 
 
-где функция потерь в RankSVM является петлевой функцией, определённой на паре объектов \(\mathbf{x} \succ \mathbf{z}\), то есть она имеет следующий вид:
+При этом функция потерь в RankSVM является петлевой функцией, определённой на паре объектов \(\mathbf{x} \succ \mathbf{z}\), то есть она имеет следующий вид:
 
 \[
-L(f, \mathbf{x}, \mathbf{z}, y) = max(0, 1 - (f(\mathbf{x}, \mathbf{w}))).
+L(f, \mathbf{x}, \mathbf{z}, y) = max(0, 1 - (f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w}))).
 \]
 
-Если ввести переменные оптимизации \(\xi_i = max(0, 1 - (f(\mathbf{x}, \mathbf{w}))\), то данная задача оптимизации может быть переписана в другом виде:
+Если ввести переменные оптимизации \(\xi_i = max(0, 1 - (f(\mathbf{x_i}, \mathbf{w}) - f(\mathbf{z_i}, \mathbf{w}))\), то данная задача оптимизации может быть переписана в другом виде:
 
 \[
 \frac{1}{2}<w, w> + C \cdot \sum \limits_{i=1}^n \xi_i,
@@ -243,14 +244,14 @@ m(A_i) = c_i / N.
 
 \[
 Bel(A) = \sum \limits_{A_i: A_i \subseteq A} m(A_i), 
-Pl(A) = \sum \limits_{A_i: A_i \cap \neq \varnothing} m(A_i).
+Pl(A) = \sum \limits_{A_i: A_i \cap A \neq \varnothing} m(A_i).
 \]
 
 Как было указано в \reference{Halpern1992}, функция доверия может быть формально определена как функция, удовлетворяющая аксиомам, которые могут быть расценены как ослабление аксиом Колмогорова, характеризующие вероятностные функции. 
 Поэтому разумно понимать функцию доверия как обобщённую вероятностную функцию \reference{Dempster1967}, а оценки функций доверия \(Bel(A)\) и правдоподобия \(Pl(A)\) могут рассматриваться как нижняя и верхняя границы для вероятности \emph{A}, то есть \(Bel(A) \leq Pr(A) \leq Pl(A)\).
 
 \par
-Если существует функция \(h(x)\), то нижнее и верхнее ожидания функции во фреймворке функций доверия могут быть найдены следующим образом \reference{Nguyen1994}, \reference{Strat1990}:
+Если существует функция \(h(x)\), то её нижнее и верхнее математические ожидания в рамках теории функций доверия могут быть найдены следующим образом \reference{Nguyen1994}, \reference{Strat1990}:
 
 \[
 \mathbb{\overline{E}} h = \sum \limits_{i=1}^N m(A_i) \inf_{x \in A_i} h(x), 
@@ -259,7 +260,7 @@ Pl(A) = \sum \limits_{A_i: A_i \cap \neq \varnothing} m(A_i).
 
 %======================================================================================================================
 
-\section{Формулирование задачи классифкации в терминах неточных сравнений}
+\section{Формальная постановка задачи классифкации в терминах неточных сравнений}
 \label{sec:classification_problem_by_imprecise_comparisons}
 
 \par
@@ -270,15 +271,24 @@ Pl(A) = \sum \limits_{A_i: A_i \cap \neq \varnothing} m(A_i).
 Точные оценки \(\mathbf{x} \succ \mathbf{z}\) могут рассматриваться как частный случай неточных, когда множества \(\mathbf{A}\) и \(\mathbf{B}\) состоят из одного элемента. 
 Другими словами, нельзя в общем смысле выделить простые или ``точные'' оценки сравнений вида \(\mathbf{x_i} \succ \mathbf{y_j}\), но зато, в свою очередь, имеютя ``неточные'' оценки \(\mathbf{A} \succ \mathbf{B}\). 
 Эти оценки означают отсутствие информации о том, как элементы из \(\mathbf{A}\) сравнимы между собой. 
-То же самое может быть сказано и о \(\mathbf{B}\). 
+То же самое может быть сказано и об элементах из \(\mathbf{B}\). 
 
 \par
 Перед дальнейшим рассмотрением этих неточных оценок определим их свойства:
 
 \begin{enumerate}
-\item \(\mathbf{C} \succ \mathbf{D} \subseteq \mathbf{A} \succ \mathbf{B}\), если \(\mathbf{C} \subseteq \mathbf{A}\) и \(\mathbf{D} \subseteq \mathbf{B}\).
+\item Парное сравнение входит в другое парное сравнение, если каждое из элементов сравнений одной группы входит в элементы сравнения другой группы:
 
-\item \(\mathbf{C} \succ \mathbf{D} \cap \mathbf{A} \succ \boldsymbol{B} = \varnothing\), если \(\forall\mathbf{x} \in \mathbf{C}\) и \(\forall\mathbf{y} \in \mathbf{D}\), то имеют место \(\mathbf{x} \notin \mathbf{A}\) и \(\mathbf{y} \notin \mathbf{B}\).
+\begin{center}
+\(\mathbf{C} \succ \mathbf{D} \subseteq \mathbf{A} \succ \mathbf{B}\), если \(\mathbf{C} \subseteq \mathbf{A}\) и \(\mathbf{D} \subseteq \mathbf{B}\).
+\end{center}
+
+\item Два сравнения не пересекаются между собой, если отдельные элементы этих сравнений не пересекаются:
+
+\begin{center}
+\(\mathbf{C} \succ \mathbf{D} \cap \mathbf{A} \succ \boldsymbol{B} = \varnothing\), если \(\forall\mathbf{x} \in \mathbf{C}\) и \(\forall\mathbf{y} \in \mathbf{D}\), то имеют место \(\mathbf{x} \notin \mathbf{A}\) и \(\mathbf{y} \notin \mathbf{B}\).
+\end{center}
+
 \end{enumerate}
 
 \par 
@@ -521,7 +531,7 @@ K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2}) = K(\mathbf{x_1}, \mat
 
 \begin{thebibliography}{9}
 	\bibitem{Herbrich2000} R. Herbrich, T. Graepel, K. Obermayer. Large margin rank boundaries for ordinal regression. Smola, Bartlett, Schoelkopf, and Schuurmans, editors, Advances in Large Margin Classifiers, pp. 115–132. MIT Press, Cambridge, MA, 2000%
-	\bibitem{Burges2005} C.J. Burges, T. Shaked, E. Renshaw, A. Lazier, M. Deeds, N. Hamilton, G. Hullender. Learning to rank using gradient descent. Proceedings of the 22nd International Conference on Machine Learning (ICML 2005), pp. 89–96, 2005%
+	\bibitem{Burges2005} C.J. Burges, T. Shaked, E. Renshaw, A. Lazier, M. Deeds, N. Hamilton, G. Hullender. Learning to rank using gradient descent. Proceedings of the 22nd International Conference on Machine Learning (ICML 2005), pp. 89-96, 2005%
 	\bibitem{Gao2005} J. Gao, H. Qi, X. Xia, J. Nie. Linear discriminant model for information retrieval. Proceedings of the 28th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR 2005), pp. 290–297, 2005%
 	\bibitem{Shen2005} L. Shen, A.K. Joshi. Ranking and reranking with perceptron. Journal of Machine Learning 60(1–3), pp. 73–96, 2005%
 	\bibitem{Freund2003} Y. Freund, R. Iyer, R. Schapire, Y. Singer. An efficient boosting algorithm for combining preferences. Journal of Machine Learning Research 4, pp. 933–969, 2003%
@@ -539,7 +549,7 @@ K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2}) = K(\mathbf{x_1}, \mat
 	\bibitem{Strat1990} T.M. Strat. Decision analysis using belief functions. International Journal of Approximate Reasoning, 4(5), pp. 391–418, 1990%
 	\bibitem{Robert1994} C.P. Robert. The Bayesian Choice. Springer, New York, 1994%
 	\bibitem{Tikhonov1977} A.N. Tikhonov, V.Y. Arsenin. Solution of Ill-Posed Problems. W.H. Winston, Washington DC, 1977%
-	\bibitem{Evgeniou2002} T. Evgeniou, T. Poggio, M. Pontil, A. Verri. Regularization and statistical learning theory for data analysis. Computational Statistics & Data Analysis, 38(4), pp. 421–432, 2002%
+	\bibitem{Evgeniou2002} T. Evgeniou, T. Poggio, M. Pontil, A. Verri. Regularization and statistical learning theory for data analysis. Computational Statistics \& Data Analysis, 38(4), pp. 421–432, 2002%
 	\bibitem{Scholkopf2002} B. Scholkopf, A.J. Smola. Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond. The MIT Press, Cambridge, Massachusetts, 2002%
 	\bibitem{Yu2009} H. Yu, Y. Kim, S. Hwang. Rv-svm: An efficient method for learning ranking SVM. T. Theeramunkong, B. Kijsirikul, N. Cercone, and T.-B. Ho, editors, Advances in Knowledge Discovery and Data Mining, vol. 5476 of Lecture Notes in Computer Science, pp. 426–438. Springer Berlin / Heidelberg, 2009%
 \end{thebibliography}
