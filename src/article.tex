@@ -409,7 +409,7 @@ L(f, \mathbf{x}, \mathbf{z}) = max (0,1 - f(\mathbf{x}, \mathbf{w}) + f(\mathbf{
 
 \par
 и линейную функцию \emph{f}. 
-В этом случае можно переписать данную задачу оптимизации в следующем виде:
+В этом случае можно переписать данную задачу оптимизации в следующем виде: \textcolor{red}{Данная задача уже была переписана в таком виде выше}
 
 \[
 \overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},
@@ -439,18 +439,18 @@ G_{ij} \succ 0, (i, j) \in \Rho.
 Введём новые переменные оптимизации \(G_{ij} (i, j) \in \Rho\) такие, что
 
 \[
-G_{ij} = \underset{\mathbf{x} \ in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}} L ( f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})). 
+G_{ij} = \underset{\mathbf{x} \ in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{min}} L ( f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})). 
 \]
 
 \par
 Тогда задача оптимизации может быть переписана как
 
 \[
-\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} \underset{\mathbf{x} \ in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{min}} L ( f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w}))
+\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},
 \]
 
 \par
-при ограничении
+при ограничении \textcolor{red}{Точно ли \(G_{ij}\ \geq L\)?}
 
 \[
 G_{ij} \geq L ( f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})), \forall \mathbf{x} \in \mathbf{A_i}, \forall \mathbf{z} \in \mathbf{B_j}, (i, j) \in \Rho.
@@ -518,7 +518,7 @@ L = \frac{1}{2} \langle w, w \rangle - \sum \limits_{(i, j) \in \Rho} \sum \limi
 После подстановки (4) в лагранжиан можно окончательно получить двойственную задачу оптимизации:
 
 \[
-L = \sum \limits_{(i, j) \in \Rho} \sum \limits_{\mathbf{x} \in \mathbf{A_j}, \mathbf{z} \in \mathbf{B_j}} \mu_{ij} (\mathbf{x}, \mathbf{z})
+L = \sum \limits_{(i, j) \in \Rho} \sum \limits_{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}} \mu_{ij} (\mathbf{x}, \mathbf{z})
 \]
 
 \[
