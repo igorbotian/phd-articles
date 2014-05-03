@@ -476,7 +476,7 @@ G_{ij} \geq L ( f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})), \forall 
 Более подробно анализ регуляризационных методов представлен в работах \reference{Evgeniou2002} \reference{Scholkopf2002}. 
 
 \par
-Мы можем переписать \textcolor{red}{целевую функцию} следующим образом:
+Тогда можно переписать \textcolor{red}{целевую функцию} следующим образом:
 
 \[
 \overline{R}(\mathbf{w}) = \frac{1}{2} \langle w, w \rangle + C \sum \limits_{(i, j) \in \Rho} G_{ij}. 
@@ -564,6 +564,48 @@ K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2}) = K(\mathbf{x_1}, \mat
 
 \par
 Здесь \(K(\mathbf{x_1}, \mathbf{z_1}, \mathbf{x_2}, \mathbf{z_2})\) является ядром Мерсера. 
+
+%======================================================================================================================
+
+\subsection{Пример построения задачи оптимизации}
+
+\par
+Пусть существует 3 объекта и 2 сравнительные оценки, одна из которых является интервальной:
+
+\[
+\{x_1\} \succ \{x_2, x_3\}; \{x_2\} \succ \{x_3\}.
+\]
+
+Тогда множества \(\mathbf{A}\) и \(\mathbf{B}\) будут следующими:
+
+\[
+\mathbf{A_1} = \{x_1\}, \mathbf{A_2} = \{x_2\}; \mathbf{B_1} = \{x_2, x_3\}, \mathbf{B_2} = \{x_3\}.
+\]
+
+Пусть, в соответствии с формулой, приведённой выше, двойственная задача будет представлена в следующем виде:
+
+\[
+L = L_1 - L_2.
+\]
+
+Далее для краткости ниже будет подробно расписано лишь уменьшаемое \(L_1\):
+
+\[
+L_1 = \sum \limits_{(i, j) \in \Rho} \sum \limits_{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}} \mu_{ij} (\mathbf{x}, \mathbf{z}) =
+\]
+
+\[
+= \sum \limits_{\mathbf{x} \in \mathbf{A_1}, \mathbf{z} \in \mathbf{B_1}} \mu_{11} (\mathbf{x}, \mathbf{z})
++ \sum \limits_{\mathbf{x} \in \mathbf{A_1}, \mathbf{z} \in \mathbf{B_2}} \mu_{12} (\mathbf{x}, \mathbf{z})
++ \sum \limits_{\mathbf{x} \in \mathbf{A_2}, \mathbf{z} \in \mathbf{B_1}} \mu_{21} (\mathbf{x}, \mathbf{z})
++ \sum \limits_{\mathbf{x} \in \mathbf{A_2}, \mathbf{z} \in \mathbf{B_2}} \mu_{22} (\mathbf{x}, \mathbf{z}) = 
+\]
+
+\[
+= \mu_{11} (x_1, x_2) + \mu_{11} (x_1, x_3) + \mu_{21} (x_2, x_2) + \mu_{21} (x_2, x_3) + \mu_{12} (x_1, x_3) + \mu_{22} (x_2, x_3).
+\]
+
+Таким же образом получается и вычитаемое \(L_2\). 
 
 %======================================================================================================================
 \section{Заключение}
