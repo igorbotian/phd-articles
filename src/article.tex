@@ -134,7 +134,7 @@
 \par
 Целью классификации является нахождение решающей функции \(g(\mathbf{x})\), которая точно прогнозирует класс \emph{y}, которому принадлежит некоторый новый пример \(\mathbf{x}\), который в свою очередь может либо принадлежать, либо не принадлежать обучающей выборке. 
 Другими словами, необходимо найти функцию \emph{g}, минимизирующую ошибку классификации, которая определяется вероятностью условия \(g(x) \neq y\). 
-Один из возможных подходов для решения данной задачи является применение так называемой разделяющей функции \(f(\bolsymbol{x}, \mathbf{w})\). 
+Один из возможных подходов для решения данной задачи является применение так называемой разделяющей функции \(f(\mathbf{x}, \mathbf{w})\). 
 Эта вещественная функция, знак которой определяет класс: \(g(\mathbf{x})=sgn(f(\mathbf{x}, \mathbf{w}))\).
 Она имеет параметры \(\mathbf{w}=(w_0, w_1, \dots, w_n), \mathbf{w} \in \Lambda, w = (w_1, \dots, w_n)\), которые опредляются на основе обучающей выборки посредством алгоритма классификации. 
 В частности, функция \(f(\mathbf{x}, \mathbf{w})\) может быть линейной, то есть \(f(\mathbf{x}, \mathbf{w}) = \langle w, \mathbf{x} \rangle + w_0\). 
@@ -321,7 +321,7 @@ Pl(A) = \sum \limits_{A_i: A_i \cap A \neq \varnothing} m(A_i).
 \item Два сравнения не пересекаются между собой, если отдельные элементы этих сравнений не пересекаются:
 
 \begin{center}
-\(\mathbf{C} \succ \mathbf{D} \cap \mathbf{A} \succ \boldsymbol{B} = \varnothing\), если \(\forall\mathbf{x} \in \mathbf{C}\) и \(\forall\mathbf{y} \in \mathbf{D}\), то имеют место \(\mathbf{x} \notin \mathbf{A}\) и \(\mathbf{y} \notin \mathbf{B}\).
+\(\mathbf{C} \succ \mathbf{D} \cap \mathbf{A} \succ \mathbf{B} = \varnothing\), если \(\forall\mathbf{x} \in \mathbf{C}\) и \(\forall\mathbf{y} \in \mathbf{D}\), то имеют место \(\mathbf{x} \notin \mathbf{A}\) и \(\mathbf{y} \notin \mathbf{B}\).
 \end{center}
 
 \end{enumerate}
