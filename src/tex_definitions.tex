@@ -1,3 +1,11 @@
+\newcounter{SectionCounter}
+\setcounter{SectionCounter}{1}
+
+\newcounter{SubsectionCounter}
+\setcounter{SubsectionCounter}{1}
+
+% =============================================================================
+
 \newcommand{\ClearPageStyle} {%
 	\pagestyle{fancy}
 	\fancyhf{}
@@ -7,6 +15,19 @@
 \newcommand{\ApplyCommonPageStyle} {%
 	\ClearPageStyle
 	\cfoot{\thepage}
+}
+
+\newcommand{\Section} [1] {%
+	\textbf{\arabic{SectionCounter}. #1}%
+	\stepcounter{SectionCounter}%
+	\setcounter{SubsectionCounter}{1}%
+	%\label{sec:#2}%
+}
+
+\newcommand{\Subsection} [1] {%
+	\textbf{\arabic{SectionCounter}.\arabic{SubsectionCounter}. #1}%
+	\stepcounter{SubsectionCounter}%
+	%\label{sec:#2}%
 }
 
 % =============================================================================
