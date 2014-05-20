@@ -7,8 +7,8 @@
 
 \documentclass[11pt]{beamer}
 \usetheme{Boadilla}
+\usefonttheme{professionalfonts}
 \usefonttheme[onlylarge]{structurebold}
-\setbeamerfont*{frametitle}{size=\Large,series=\bfseries}
 \setbeamertemplate{navigation symbols}{}
 
 %------------------------------------------------------------------------------
@@ -18,7 +18,6 @@
 \usepackage{amsmath} % для поддержки расширенных математических символов
 \usepackage{amsfonts} % для поддержки математических шрифтов
 \usepackage{amssymb} % для поддержки расширенных математических символов
-\usepackage[T2A]{fontenc} % задание шрифта
 
 \usepackage[english,russian]{babel} % поддержка переносов слов
 
@@ -50,8 +49,8 @@
 
 \begin{itemize}
 	\item Задача классификации
-	\item \(y_{0}\) и \(y_{max}\) - классы
-	\item \(y_{0}\) - нерелевантность, \(y_{max}\) - наибольшая релевантность
+	\item \(y_0\) и \(y_{max}\) - классы
+	\item \(y_0\) - нерелевантность, \(y_{max}\) - наибольшая релевантность
 	\item Порядок между ними \(\Rightarrow\) задача ранжирования
 	\item Классы определяются экспертами
 	\item Эксперты дают свою оценку \(\Rightarrow\) формирование обучающей выборки
@@ -84,14 +83,14 @@
 
 \begin{itemize}
 	\item Обучающая выборка \\
-		\(\mathbf{x}\) – образцы наблюдений, \(z\) - классы \\
-		\(F_{0}(\mathbf{x}, y): (\mathbf{x_1}, y_1), (\mathbf{x_2}, y_2), \cdots, (\mathbf{x_n}, y_n) \in \mathbf{\chi} \times  \{-1, +1\} \)
+		\(\mathbf{x}\) – образцы наблюдений, \(z\) - классы
+		\[F_{0}(\mathbf{x}, y): (\mathbf{x_1}, y_1), (\mathbf{x_2}, y_2), \cdots, (\mathbf{x_n}, y_n) \in \mathbf{\chi} \times  \{-1, +1\}. \]
 	\item Цель классификации - найти функцию \(g(\mathbf{x})\), минимизирующую ошибку классификации
-	\item Одно из решений - поиск разделяющей функции \(f(\mathbf{x}, \mathbf{w})\) \\
-		\(g(\mathbf{x}) = sgn(f(\mathbf{x}, \mathbf{w}))\) \\
+	\item Одно из решений - поиск разделяющей функции \(f(\mathbf{x}, \mathbf{w})\), \\
 		\(\mathbf{w}\) - параметры
-	\item Как найти \(\mathbf{w}\)? Путём вычисления функционала риска\\
-		\(R(\mathbf{w}) = \int \limits_{\chi \times \{-1, +1\}} L(f, \mathbf{x}, y) \mathrm{d} F_0(\mathbf{x}, y)\)
+		\[g(\mathbf{x}) = sgn(f(\mathbf{x}, \mathbf{w})).\]
+	\item Как найти \(\mathbf{w}\)? Путём вычисления функционала риска
+		\[R(\mathbf{w}) = \int \limits_{\chi \times \{-1, +1\}} L(f, \mathbf{x}, y) \mathrm{d} F_0(\mathbf{x}, y).\]
 	\item \(L(f, \mathbf{x}, y)\) - функция потерь \\
 		\(0\) - классификация верна, иначе ошибка классификации
 \end{itemize}
@@ -104,15 +103,14 @@
 	\item Сравниваются пары \((\mathbf{x}, \mathbf{z})\) из множества объектов
 	\item Идея Лиу: использование математических ожиданий \\
 	Соответствие \((\mathbf{x}, \mathbf{z})\) и \(y \in \{-1, +1\}\) \\
-		\(y = 1 \Rightarrow \mathbf{x} \succ \mathbf{z}\) \\
-		\(y = -1 \Rightarrow \mathbf{z} \succ \mathbf{x}\) \\
-		\(R(\mathbf{w}) = \int \limits_{\chi \times \chi \times \{-1, 1\}} L(f, \mathbf{x}, \mathbf{z}, y) \mathrm{d} F_1(\mathbf{x}, \mathbf{z}, y)\)
+		\(y = 1 \Rightarrow \mathbf{x} \succ \mathbf{z}\), \(y = -1 \Rightarrow \mathbf{z} \succ \mathbf{x}\)
+		\[R(\mathbf{w}) = \int \limits_{\chi \times \chi \times \{-1, 1\}} L(f, \mathbf{x}, \mathbf{z}, y) \mathrm{d} F_1(\mathbf{x}, \mathbf{z}, y).\]
 	\item Тогда задача классификации - поиск ранжирующей функции \(f(\mathbf{x}, \mathbf{w})\), минимизирующей функционал риска
-	\item Для её поиска можно воспользоваться RankSVM \\
-		\(\frac{1}{2}<w, w> + C \cdot \sum \limits_{i=1}^n \xi_i\) \\
+	\item Для её поиска можно воспользоваться RankSVM
+		\[\frac{1}{2}<w, w> + C \cdot \sum \limits_{i=1}^n \xi_i,\]
 		при ограничениях \\
-		\(f(\mathbf{x_i}, w) - f(\mathbf{z_i}, w) \geq 1 - \xi_i, \xi_i \geq 0, i = 1, \cdots, n\)
-	\item Если \(f(\mathbf{x}, \mathbf{w})\), то исходная задача сводится к задаче квадратичного программирования
+		\(f(\mathbf{x_i}, w) - f(\mathbf{z_i}, w) \geq 1 - \xi_i, \xi_i \geq 0, i = 1, \cdots, n.\)
+	\item \(f(\mathbf{x}, \mathbf{w})\) - линейна \(\Rightarrow\) задача квадратичного программирования
 \end{itemize}
 
 \end{frame}
@@ -122,14 +120,14 @@
 \begin{itemize}
 	\item \emph{U} – универсальное множество (\emph{фрейм различения}) \\
 		\emph{N} наблюдений элемента \(u \in U\) \\
-		(неточное измерение) \(\Rightarrow\) множество значений \(emph){A}
+		(неточное измерение) \(\Rightarrow\) множество значений \emph{A}
 	\item \(c_i\) - количество появлений \(A_i \subseteq U\)
 	\item \(\Rho_o(U)\) - множество всех подмножеств \emph{U}
-	\item Базовая вероятность (БВ) \\
-		\(m : \Rho_o(U) \to [0,1], m(\varnothing) = 1, \sum \limits_{A \in \Rho_o(U)} m(A) = 1\) \\
-		\(m(A_i) = c_i / N\)
-	\item Математическое ожидание БВ (для \(h(x)\)) \\
-		\(\mathbb{\overline{E}} h = \sum \limits_{i=1}^N m(A_i) \inf_{x \in A_i} h(x)\) (верхнее)
+	\item Базовая вероятность (БВ)
+		\[m : \Rho_o(U) \to [0,1], m(\varnothing) = 1, \sum \limits_{A \in \Rho_o(U)} m(A) = 1.\] 
+		\[m(A_i) = c_i / N.\]
+	\item Математическое ожидание БВ (для \(h(x)\)) (верхнее)
+		\[\mathbb{\overline{E}} h = \sum \limits_{i=1}^N m(A_i) \inf_{x \in A_i} h(x).\]
 \end{itemize}
 
 \end{frame}
@@ -137,7 +135,7 @@
 \begin{frame}{Формальная постановка задачи в терминах неточных сравнений (часть 1)}
 
 \begin{itemize}
-	\item \(\mathbf{\psi} = \{\mathbf{x_1}, \mathbf{x_2}, \dots, \mathbf{x_M}\}\) - объекты для сравнения. \\
+	\item \(\mathbf{\Psi} = \{\mathbf{x_1}, \mathbf{x_2}, \dots, \mathbf{x_M}\}\) - объекты для сравнения. \\
 	Пусть у нас есть \emph{M} объектов для сравнения. \\
 	Тогда \(M \cdot (M-1)\) пар для сравнения - \emph{фрейм различения}
 	\item Обучающая выборка - \(b \leq N\) оценок вида \(\mathbf{A_i} \succ \mathbf{B_j}\), где \(\mathbf{A}\) и \(\mathbf{B}\) - множества
@@ -153,7 +151,7 @@
 
 \begin{itemize}
 	\item Тогда функционал риска определяется так:
-	\(\overline{R}(\mathbf{w}) = \mathbb{\overline{E}}L = \frac{1}{n} \sum \limits_{(i,j) \in \Rho} \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}}L(f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w}))\)
+	\[\overline{R}(\mathbf{w}) = \mathbb{\overline{E}}L = \frac{1}{n} \sum \limits_{(i,j) \in \Rho} \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}}L(f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})).\]
 	\item Наиболее благоприятный случай: \(\emph{max} \rightarrow \emph{min}\)
 \end{itemize}
 
@@ -163,13 +161,14 @@
 
 \begin{itemize}
 	\item \textbf{Цель} - минимизация верхней оценки риска над множеством параметров \textbf{w}
-	\item Новые переменные оптимизации:\\
-		\(G_{ij} = \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}} L (f (\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w}))\)
+	\item Новые переменные оптимизации:
+		\[G_{ij} = \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}} L (f (\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})).\]
 	\item Задача оптимизации выглядит так:\\
-		\(\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},\) при ограничениях\\
+		\[\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},\] 
+		при ограничениях\\
 		\(G_{ij} + \langle w, \mathbf{x} - \mathbf{z} \rangle \geq 1,\) \\ 
 		\(\forall \mathbf{x} \in \mathbf{A_i}, \forall \mathbf{z} \in \mathbf{B_j}, \) \\
-		\(G_{ij} \succ 0, (i, j) \in \Rho\), \(\mathbf{x},\mathbf{z} \in \Psi\).
+		\(G_{ij} \succ 0, (i, j) \in \Rho\).
 \end{itemize}
 
 \end{frame}
@@ -177,13 +176,14 @@
 \begin{frame}{Минимаксная стратегия (часть 2)}
 
 \begin{itemize}
-	\item Петлевая функция потерь:\\
-		\(L(f, \mathbf{x}, \mathbf{z}) = max (0,1 - f(\mathbf{x}, \mathbf{w}) + f(\mathbf{z}, \mathbf{w}))\)
-	\item Получаем задачу линейного программирования:\\
-		\(\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij}\) \\
-		при ограничениях \(G_{ij} + \langle w, \mathbf{x} - \mathbf{z} \rangle \geq 1,\) \\ 
+	\item Петлевая функция потерь:
+		\[L(f, \mathbf{x}, \mathbf{z}) = max (0,1 - f(\mathbf{x}, \mathbf{w}) + f(\mathbf{z}, \mathbf{w})).\]
+	\item Получаем задачу линейного программирования:
+		\[\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},\]
+		при ограничениях \\
+		\(G_{ij} + \langle w, \mathbf{x} - \mathbf{z} \rangle \geq 1,\) \\ 
 		\(\forall \mathbf{x} \in \mathbf{A_i}, \forall \mathbf{z} \in \mathbf{B_j}, \)\\
-		\(G_{ij} \succ 0, (i, j) \in \Rho\)
+		\(G_{ij} \succ 0, (i, j) \in \Rho\).
 \end{itemize}
 
 \end{frame}
