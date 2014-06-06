@@ -18,6 +18,7 @@
 \usepackage{amsmath} % для поддержки расширенных математических символов
 \usepackage{amsfonts} % для поддержки математических шрифтов
 \usepackage{amssymb} % для поддержки расширенных математических символов
+\usepackage{graphicx} % для поддержки рисунков
 
 \usepackage[english,russian]{babel} % поддержка переносов слов
 
@@ -26,9 +27,11 @@
 \title[]{Общий подход к классификации и ранжированию документов при неточных сравнительных оценках}
 \author[И.Ю.~Ботян, Л.В.~Уткин]{И.Ю.~Ботян\andЛ.В.~Уткин}
 \institute[СПбГЛТУ]{\large Санкт-Петербургский государственный лесотехнический университет}
-\date[SCM 2014]{\large SCM-2014 Saint-Petersburg, 21-23 May 2014}
+\date[SCM-2014]{\large SCM-2014, Санкт-Петербург, 21-23 мая 2014}
 
 %------------------------------------------------------------------------------
+
+\DeclareGraphicsExtensions{.png}
 
 \newcommand{\Rho}{%
 	\mathcal{P}%
@@ -38,6 +41,8 @@
 
 \begin{document}
 
+\graphicspath{ {./img/} }
+
 %------------------------------------------------------------------------------
 \begin{frame}
 
@@ -45,51 +50,41 @@
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Введение}
+\begin{frame}{Введение. Задача классификации}
 
 \begin{itemize}
-	\item Задача классификации
-	\item \(y_0\) и \(y_{max}\) - классы
-	\item \(y_0\) - нерелевантность, \(y_{max}\) - наибольшая релевантность
-	\item Порядок между ними \(\Rightarrow\) задача ранжирования
-	\item Классы определяются экспертами
-	\item Эксперты дают свою оценку \(\Rightarrow\) формирование обучающей выборки
-	\item Существующие методы работают лишь с простыми оценками
-	\begin{itemize}
-		\item Оценка точна
-		\item Является одиночной (не групповой)
-	\end{itemize}
+	\begin{center}
+		\includegraphics[scale=0.35]{classification}
+	\end{center}
 \end{itemize}
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Интервальные оценки экспертов}
+\begin{frame}{Традиционные и интервальные оценки экспертов}
 
 \begin{itemize}
-	\item Но в реальности оценки непростые! Как показывает практика, экспертные оценки зачастую являются или групповыми, или неточными
-	\begin{itemize}
-		\item Оценка групповая (соответствие ``группа'' - ``группа'')
-		\item Оценка неточная
-	\end{itemize}
-	\item \textbf{Рисунок}
-	\item Такие оценки будем называть \emph{интервальными}
-	\item Не существует обоснованных методов решения задачи ранжирования на их основе
-	\item Цель – разработка такого подхода
+	\item \textbf{Пример:} результаты запроса в поисковой системе
+	\item Одиночные экспертные оценки (простые)
+		\begin{center}
+			\includegraphics[scale=0.4]{simple_judgment}
+		\end{center}
+	\item Групповые экспертные оценки (интервальные)
+		\begin{center}
+			\includegraphics[scale=0.4]{interval_judgment}
+		\end{center}
+	\item \underline{Не существует} подходов на основе интервальных оценок
 \end{itemize}
 
 \end{frame}
 %------------------------------------------------------------------------------
 \begin{frame}{Стандартная постановка задачи классификации}
 
+\begin{center}
+		\includegraphics[scale=0.3]{standard_classification_problem}
+	\end{center}
+
 \begin{itemize}
-	\item Обучающая выборка \\
-		\(\mathbf{x}\) – образцы наблюдений, \(z\) - классы
-		\[F_{0}(\mathbf{x}, y): (\mathbf{x_1}, y_1), (\mathbf{x_2}, y_2), \cdots, (\mathbf{x_n}, y_n) \in \mathbf{\chi} \times  \{-1, +1\}. \]
-	\item Цель классификации - найти функцию \(g(\mathbf{x})\), минимизирующую ошибку классификации
-	\item Одно из решений - поиск разделяющей функции \(f(\mathbf{x}, \mathbf{w})\), \\
-		\(\mathbf{w}\) - параметры
-		\[g(\mathbf{x}) = sgn(f(\mathbf{x}, \mathbf{w})).\]
-	\item Как найти \(\mathbf{w}\)? Путём вычисления функционала риска
+	\item Параметры \(\mathbf{w}\) находятся путём вычисления функционала риска
 		\[R(\mathbf{w}) = \int \limits_{\chi \times \{-1, +1\}} L(f, \mathbf{x}, y) \mathrm{d} F_0(\mathbf{x}, y).\]
 	\item \(L(f, \mathbf{x}, y)\) - функция потерь \\
 		\(0\) - классификация верна, иначе ошибка классификации
@@ -100,17 +95,15 @@
 \begin{frame}{Задача классификации на основе попарного обучения ранжированию}
 
 \begin{itemize}
-	\item Сравниваются пары \((\mathbf{x}, \mathbf{z})\) из множества объектов
-	\item Идея Лиу: использование математических ожиданий \\
-	Соответствие \((\mathbf{x}, \mathbf{z})\) и \(y \in \{-1, +1\}\) \\
-		\(y = 1 \Rightarrow \mathbf{x} \succ \mathbf{z}\), \(y = -1 \Rightarrow \mathbf{z} \succ \mathbf{x}\)
-		\[R(\mathbf{w}) = \int \limits_{\chi \times \chi \times \{-1, 1\}} L(f, \mathbf{x}, \mathbf{z}, y) \mathrm{d} F_1(\mathbf{x}, \mathbf{z}, y).\]
-	\item Тогда задача классификации - поиск ранжирующей функции \(f(\mathbf{x}, \mathbf{w})\), минимизирующей функционал риска
-	\item Для её поиска можно воспользоваться RankSVM
-		\[\frac{1}{2}<w, w> + C \cdot \sum \limits_{i=1}^n \xi_i,\]
-		при ограничениях \\
-		\(f(\mathbf{x_i}, w) - f(\mathbf{z_i}, w) \geq 1 - \xi_i, \xi_i \geq 0, i = 1, \cdots, n.\)
-	\item \(f(\mathbf{x}, \mathbf{w})\) - линейна \(\Rightarrow\) задача квадратичного программирования
+	\item Сравниваются элементы из пар объектов \((\mathbf{x}, \mathbf{z})\)
+	\item Идея Лиу\footnote{T.Y. Liu. Learning to Rank for Information Retrieval, Springer,2011}: использование математических ожиданий\\
+	\(y = 1 \Rightarrow \mathbf{x} \succ \mathbf{z}\),
+	\(y = -1 \Rightarrow \mathbf{z} \succ \mathbf{x}\)
+	\[(\mathbf{x}, \mathbf{z}) \Leftrightarrow y \in \{-1, +1\}\]
+	\item Задача классификации \(\rightarrow\) поиск ранжирующей функции
+	\[f(\mathbf{x}, \mathbf{z}, \mathbf{w}): R(\mathbf{w}) \rightarrow min\]
+	\item \(f(\mathbf{x}, \mathbf{z}, \mathbf{w})\) - линейна \(\Rightarrow\) задача квадратичного программирования
+	\item Поиск \(f(\mathbf{x}, \mathbf{z}, \mathbf{w})\) с помощью RankSVM
 \end{itemize}
 
 \end{frame}
@@ -120,69 +113,51 @@
 \begin{itemize}
 	\item \emph{U} – универсальное множество (\emph{фрейм различения}) \\
 		\emph{N} наблюдений элемента \(u \in U\) \\
-		(неточное измерение) \(\Rightarrow\) множество значений \emph{A}
-	\item \(c_i\) - количество появлений \(A_i \subseteq U\)
+		(неточное измерение) \(\Rightarrow\) множество значений \(A_i \subseteq U\)
+	\item \(c_i\) - количество появлений \(A_i\) в \(U\)
 	\item \(\Rho_o(U)\) - множество всех подмножеств \emph{U}
 	\item Базовая вероятность (БВ)
 		\[m : \Rho_o(U) \to [0,1], m(\varnothing) = 1, \sum \limits_{A \in \Rho_o(U)} m(A) = 1.\] 
 		\[m(A_i) = c_i / N.\]
-	\item Математическое ожидание БВ (для \(h(x)\)) (верхнее)
+	\item Математическое ожидание БВ (для \(h(x)\)) \textit{{\footnotesize (верхнее)}}
 		\[\mathbb{\overline{E}} h = \sum \limits_{i=1}^N m(A_i) \inf_{x \in A_i} h(x).\]
 \end{itemize}
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Формальная постановка задачи в терминах неточных сравнений (часть 1)}
+\begin{frame}{Формальная постановка задачи в терминах неточных сравнений}
 
 \begin{itemize}
-	\item \(\mathbf{\Psi} = \{\mathbf{x_1}, \mathbf{x_2}, \dots, \mathbf{x_M}\}\) - объекты для сравнения. \\
-	Пусть у нас есть \emph{M} объектов для сравнения. \\
-	Тогда \(M \cdot (M-1)\) пар для сравнения - \emph{фрейм различения}
-	\item Обучающая выборка - \(b \leq N\) оценок вида \(\mathbf{A_i} \succ \mathbf{B_j}\), где \(\mathbf{A}\) и \(\mathbf{B}\) - множества
+	\item \(\{\mathbf{x_1}, \mathbf{x_2}, \dots, \mathbf{x_M}\}\) - \emph{M} объектов для сравнения
 	\item \(c_{ij}\) - количество оценок \(\mathbf{A_i} \succ \mathbf{B_j}\), где \((i, j) \in \Rho\)
-	\item \emph{n} - множество пар индексов \((i, j) \in \Rho\) \\
-		Тогда базовая вероятность оценки \(m(\mathbf{A_i} \succ \mathbf{B_j}) = c_{ij} / n\)
-	\item Если \(c_{ij} = 1\), то \(m(\mathbf{A_i} \succ \mathbf{B_i}) = 1/n\)
+	\item \emph{n} - общее количество всех оценок
+	\item Тогда базовая вероятность оценки \(m(\mathbf{A_i} \succ \mathbf{B_j}) = c_{ij} / n\)
+	\item Зачастую оценка всего одна \(\Rightarrow m(\mathbf{A_i} \succ \mathbf{B_j}) = 1 / n\)
 \end{itemize}
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Формальная постановка задачи в терминах неточных сравнений (часть 2)}
+\begin{frame}{Метод решения поставленной задачи}
 
 \begin{itemize}
-	\item Тогда функционал риска определяется так:
+	\item Функционал риска определяется так:\\
+		\textit{{\footnotesize (наименее благоприятные случаи)}}
 	\[\overline{R}(\mathbf{w}) = \mathbb{\overline{E}}L = \frac{1}{n} \sum \limits_{(i,j) \in \Rho} \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}}L(f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})).\]
-	\item Наиболее благоприятный случай: \(\emph{max} \rightarrow \emph{min}\)
+	\item Наиболее благоприятные случаи: \emph{max} \(\rightarrow\) \emph{min}
 \end{itemize}
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Минимаксная стратегия (часть 1)}
+\begin{frame}{Минимаксная стратегия}
 
 \begin{itemize}
-	\item \textbf{Цель} - минимизация верхней оценки риска над множеством параметров \textbf{w}
-	\item Новые переменные оптимизации:
+	\item \textbf{Цель} - найти наиболее благоприятный из наименее благоприятных случаев
+	\item Введём переменные оптимизации:
 		\[G_{ij} = \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}} L (f (\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})).\]
-	\item Задача оптимизации выглядит так:\\
+	\item Получаем задачу квадратичного программирования:
 		\[\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},\] 
 		при ограничениях\\
-		\(G_{ij} + \langle w, \mathbf{x} - \mathbf{z} \rangle \geq 1,\) \\ 
-		\(\forall \mathbf{x} \in \mathbf{A_i}, \forall \mathbf{z} \in \mathbf{B_j}, \) \\
-		\(G_{ij} \succ 0, (i, j) \in \Rho\).
-\end{itemize}
-
-\end{frame}
-%------------------------------------------------------------------------------
-\begin{frame}{Минимаксная стратегия (часть 2)}
-
-\begin{itemize}
-	\item Петлевая функция потерь:
-		\[L(f, \mathbf{x}, \mathbf{z}) = max (0,1 - f(\mathbf{x}, \mathbf{w}) + f(\mathbf{z}, \mathbf{w})).\]
-	\item Получаем задачу линейного программирования:
-		\[\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},\]
-		при ограничениях \\
-		\(G_{ij} + \langle w, \mathbf{x} - \mathbf{z} \rangle \geq 1,\) \\ 
-		\(\forall \mathbf{x} \in \mathbf{A_i}, \forall \mathbf{z} \in \mathbf{B_j}, \)\\
+		\(G_{ij} + \langle w, \mathbf{x} - \mathbf{z} \rangle \geq 1, \forall \mathbf{x} \in \mathbf{A_i}, \forall \mathbf{z} \in \mathbf{B_j}, \) \\
 		\(G_{ij} \succ 0, (i, j) \in \Rho\).
 \end{itemize}
 
@@ -203,7 +178,7 @@
 \begin{frame}
 
 \begin{center}
-{\Large Спасибо за ваше внимание!}
+{\Large Спасибо за внимание!}
 \end{center}
 
 \end{frame}
