@@ -18,16 +18,17 @@
 \usepackage{amsmath} % для поддержки расширенных математических символов
 \usepackage{amsfonts} % для поддержки математических шрифтов
 \usepackage{amssymb} % для поддержки расширенных математических символов
+\usepackage{color} % для поддержки цветного текста
 \usepackage{graphicx} % для поддержки рисунков
 
 \usepackage[english,russian]{babel} % поддержка переносов слов
 
 %------------------------------------------------------------------------------
 
-\title[]{Общий подход к классификации и ранжированию документов при неточных сравнительных оценках}
+\title[]{Минимаксная классификация интервальных оценок предпочтений с использованием машины опорных векторов}
 \author[И.Ю.~Ботян, Л.В.~Уткин]{И.Ю.~Ботян\andЛ.В.~Уткин}
 \institute[СПбГЛТУ]{\large Санкт-Петербургский государственный лесотехнический университет}
-\date[SCM-2014]{\large SCM-2014, Санкт-Петербург, 21-23 мая 2014}
+\date[NSMV-2014]{\large NSMV-2014, Санкт-Петербург, 27-28 июня 2014}
 
 %------------------------------------------------------------------------------
 
@@ -50,9 +51,13 @@
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Введение. Задача классификации}
+\begin{frame}{Задача классификации}
 
 \begin{itemize}
+	\item Классы определяются экспертами (\textcolor{green}{зелёный} и \textcolor{violet}{фиолетовый})
+	\item Использование обучающей выборки (чёрный)
+	\item Задача - нахождение разделяющей функции (\textcolor{blue}{синий})
+	\item Цель - соотносение объекта к тому или иному классу (\textcolor{red}{красный})
 	\begin{center}
 		\includegraphics[scale=0.35]{classification}
 	\end{center}
@@ -60,67 +65,43 @@
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Традиционные и интервальные оценки экспертов}
+\begin{frame}{Групповые экспертные оценки}
 
 \begin{itemize}
-	\item \textbf{Пример:} результаты запроса в поисковой системе
-	\item Одиночные экспертные оценки (простые)
-		\begin{center}
-			\includegraphics[scale=0.4]{simple_judgment}
-		\end{center}
-	\item Групповые экспертные оценки (интервальные)
-		\begin{center}
+	\item Простая экспертная оценка - ``объект - объект''
+	\item Групповая экспертная оценка - ``группа - группа''
+	\begin{center}
 			\includegraphics[scale=0.4]{interval_judgment}
 		\end{center}
-	\item \underline{Не существует} подходов на основе интервальных оценок
+	\item \textbf{Пример:} планирование туристического маршрута
 \end{itemize}
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Стандартная постановка задачи классификации}
+\begin{frame}{Теория Демпстера-Шефера}
 
-\begin{center}
-		\includegraphics[scale=0.3]{standard_classification_problem}
+\begin{itemize}
+	\item Позволяет вычислять вероятность события в условиях неполной информации, комбинируя её отдельные части
+	\item Неточная информация в виде неточных оценок образует множество вероятностных распределений \linebreak
+	\item Верхнее и нижнее математические ожидания:
+	\begin{center}
+	\(\mathbb{\overline{E}} h = \sum \limits_{i=1}^N m(A_i) \inf_{x \in A_i} h(x)\) \linebreak
+	\(\mathbb{\underline{E}} h = \sum \limits_{i=1}^N m(A_i) \sup_{x \in A_i} h(x)\)
 	\end{center}
-
-\begin{itemize}
-	\item Параметры \(\mathbf{w}\) находятся путём вычисления функционала риска
-		\[R(\mathbf{w}) = \int \limits_{\chi \times \{-1, +1\}} L(f, \mathbf{x}, y) \mathrm{d} F_0(\mathbf{x}, y).\]
-	\item \(L(f, \mathbf{x}, y)\) - функция потерь \\
-		\(0\) - классификация верна, иначе ошибка классификации
 \end{itemize}
 
 \end{frame}
 %------------------------------------------------------------------------------
-\begin{frame}{Задача классификации на основе попарного обучения ранжированию}
+\begin{frame}{Машина опорных векторов}
 
 \begin{itemize}
-	\item Сравниваются элементы из пар объектов \((\mathbf{x}, \mathbf{z})\)
-	\item Идея Лиу\footnote{T.Y. Liu. Learning to Rank for Information Retrieval, Springer,2011}: использование математических ожиданий\\
-	\(y = 1 \Rightarrow \mathbf{x} \succ \mathbf{z}\),
-	\(y = -1 \Rightarrow \mathbf{z} \succ \mathbf{x}\)
-	\[(\mathbf{x}, \mathbf{z}) \Leftrightarrow y \in \{-1, +1\}\]
-	\item Задача классификации \(\rightarrow\) поиск ранжирующей функции
-	\[f(\mathbf{x}, \mathbf{z}, \mathbf{w}): R(\mathbf{w}) \rightarrow min\]
-	\item \(f(\mathbf{x}, \mathbf{z}, \mathbf{w})\) - линейна \(\Rightarrow\) задача квадратичного программирования
-	\item Поиск \(f(\mathbf{x}, \mathbf{z}, \mathbf{w})\) с помощью RankSVM
-\end{itemize}
-
-\end{frame}
-%------------------------------------------------------------------------------
-\begin{frame}{Основные элементы теории Демпстера-Шефера}
-
-\begin{itemize}
-	\item \emph{U} – универсальное множество (\emph{фрейм различения}) \\
-		\emph{N} наблюдений элемента \(u \in U\) \\
-		(неточное измерение) \(\Rightarrow\) множество значений \(A_i \subseteq U\)
-	\item \(c_i\) - количество появлений \(A_i\) в \(U\)
-	\item \(\Rho_o(U)\) - множество всех подмножеств \emph{U}
-	\item Базовая вероятность (БВ)
-		\[m : \Rho_o(U) \to [0,1], m(\varnothing) = 1, \sum \limits_{A \in \Rho_o(U)} m(A) = 1.\] 
-		\[m(A_i) = c_i / N.\]
-	\item Математическое ожидание БВ (для \(h(x)\)) \textit{{\footnotesize (верхнее)}}
-		\[\mathbb{\overline{E}} h = \sum \limits_{i=1}^N m(A_i) \inf_{x \in A_i} h(x).\]
+	\item Используется в качестве средства обучения
+	\item Применяется метод RankSVM, основанный на попарном подходе
+	\item Задача классификации - минимизация ожидаемых потерь в результате неправильной классификации пар оъектов разделяющей функцией \linebreak
+	\item Минимизация функционала риска:
+	\begin{center}
+	\(R_{emp}(\mathbf{w}) = n^{-1} \cdot \sum \limits_{k=1}^n L(f_k, \mathbf{x}_k, y_k)\)
+	\end{center}
 \end{itemize}
 
 \end{frame}
@@ -128,22 +109,13 @@
 \begin{frame}{Формальная постановка задачи в терминах неточных сравнений}
 
 \begin{itemize}
-	\item \(\{\mathbf{x_1}, \mathbf{x_2}, \dots, \mathbf{x_M}\}\) - \emph{M} объектов для сравнения
-	\item \(c_{ij}\) - количество оценок \(\mathbf{A_i} \succ \mathbf{B_j}\), где \((i, j) \in \Rho\)
-	\item \emph{n} - общее количество всех оценок
-	\item Тогда базовая вероятность оценки \(m(\mathbf{A_i} \succ \mathbf{B_j}) = c_{ij} / n\)
-	\item Зачастую оценка всего одна \(\Rightarrow m(\mathbf{A_i} \succ \mathbf{B_j}) = 1 / n\)
-\end{itemize}
-
-\end{frame}
-%------------------------------------------------------------------------------
-\begin{frame}{Метод решения поставленной задачи}
-
-\begin{itemize}
-	\item Функционал риска определяется так:\\
-		\textit{{\footnotesize (наименее благоприятные случаи)}}
-	\[\overline{R}(\mathbf{w}) = \mathbb{\overline{E}}L = \frac{1}{n} \sum \limits_{(i,j) \in \Rho} \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}}L(f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})).\]
-	\item Наиболее благоприятные случаи: \emph{max} \(\rightarrow\) \emph{min}
+	\item Есть 2 вероятностных распределения - минимизирующий и максимизирующий функционал риска
+	\item Нижние и верхние границы функционала риска соответствуют верхним и нижним математическим ожиданиям в рамках теории Демпстера-Шефера:
+	\begin{center}
+		\(\underline{R}(\mathbf{w}) = \mathbb{\underline{E}}L = \frac{1}{n} \sum \limits_{(i,j) \in \Rho} \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{min}}L(f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w}))\) \linebreak
+		\(\overline{R}(\mathbf{w}) = \mathbb{\overline{E}}L = \frac{1}{n} \sum \limits_{(i,j) \in \Rho} \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}}L(f(\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w}))\)
+	\end{center} \linebreak
+	\item Их выбор обуславливает стратегию принятия решений
 \end{itemize}
 
 \end{frame}
@@ -151,14 +123,30 @@
 \begin{frame}{Минимаксная стратегия}
 
 \begin{itemize}
-	\item \textbf{Цель} - найти наиболее благоприятный из наименее благоприятных случаев
-	\item Введём переменные оптимизации:
-		\[G_{ij} = \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}} L (f (\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w})).\]
-	\item Получаем задачу квадратичного программирования:
-		\[\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij},\] 
-		при ограничениях\\
-		\(G_{ij} + \langle w, \mathbf{x} - \mathbf{z} \rangle \geq 1, \forall \mathbf{x} \in \mathbf{A_i}, \forall \mathbf{z} \in \mathbf{B_j}, \) \\
-		\(G_{ij} \succ 0, (i, j) \in \Rho\).
+	\item \textbf{Задача} - выбор ``наихудшего'' распределения, обеспечивающего наибольшоее значение функционала риска:
+	\begin{center}
+	\(G_{ij} = \underset{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}}{\operatorname{max}} L (f (\mathbf{x}, \mathbf{w}) - f(\mathbf{z}, \mathbf{w}))\) \linebreak
+	\(\overline{R}(\mathbf{w}) = \underset{\mathbf{w}, G_{ij}}{\operatorname{min}} \sum \limits_{(i, j) \in \Rho} G_{ij}\)
+	\end{center}
+	\item Получена задача линейного программирования
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Формулировка машины опорных векторов при неточных сравнениях}
+
+\begin{itemize}
+	\item \textbf{Задача} - поддержка нелинейности
+	\item Задача оптимизации представляется в двойственной форме
+	\item Нелинейность поддерживается засчёт множителей Лагранжа
+	\begin{center}
+\begin{eqnarray*}
+&L = \sum \limits_{(i, j) \in \Rho} \sum \limits_{\mathbf{x} \in \mathbf{A_i}, \mathbf{z} \in \mathbf{B_j}} \mu_{ij} (\mathbf{x}, \mathbf{z}) - \\
+&- \sum \limits_{(i, j) \in \Rho} \sum \limits_{(r, t) \in \Rho} \sum \limits_{\mathbf{x_1} \in \mathbf{A_i}, \mathbf{z_1} \in \mathbf{B_j}} \sum \limits_{\mathbf{x_2} \in \mathbf{A_r}, \mathbf{z_2} \in \mathbf{B_t}} \\
+&\mu_{ij} (\mathbf{x_1}, \mathbf{z_1}) \cdot \mu_{rt} (\mathbf{x_2}, \mathbf{z_2}) \cdot \langle \mathbf{x_1} - \mathbf{z_1}, \mathbf{x_2} - \mathbf{z_2} \rangle
+\end{eqnarray*}
+	\end{center} \linebreak
+	\item Получена задача квадратичного программирования
 \end{itemize}
 
 \end{frame}
@@ -166,11 +154,20 @@
 \begin{frame}{Заключение}
 
 \begin{itemize}
-	\item Сформулирован подход, позволяющий классифицировать документы при интервальных экспертных оценках
-	\item Основан на применении машины опорных векторов и теории Демпстера-Шефера
-	\item Характеризуется пессимистической стратегией принятия решений
-	\item Определены функционалы риска
-	\item Получены соответствующие задачи оптимизации
+	\item Сформулирован подход к классифициц документов при групповых экспертных оценках
+	\item Подход использует машину опорных векторов и теория Демпстера-Шефера
+	\item Подход характеризуется пессимистической стратегией принятия решений
+	\item Разработана соответствующая задача оптимизации
+	\item Получена двойственная форма задачи оптимизации для поддержки нелинейности
+\end{itemize}
+
+\end{frame}
+%------------------------------------------------------------------------------
+\begin{frame}{Дальнейшая работа}
+
+\begin{itemize}
+	\item Реализация разработанного подхода для попарной (\textit{pointwise}) и посписочной (\textit{listwise}) классификации помимо попарной (\textit{pairwise})
+	\item Снижение вычислительной сложности
 \end{itemize}
 
 \end{frame}
